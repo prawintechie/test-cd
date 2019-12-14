@@ -1,0 +1,22 @@
+pipeline {
+    agent {
+      docker {
+        image 'kdvolder/mvn-plus-npm'
+      }
+    }
+
+    stages {
+        stage ('Packaging Stage') {
+            steps {
+                sh npm install -g serverless
+                sh sls -version
+                sh "mvn clean package -f test-cd/pom.xml"
+            }
+        }
+    }
+    post {
+      always {
+        cleanWs()
+      }
+    }
+}
